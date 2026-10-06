@@ -1,0 +1,16 @@
+{
+ "name": "SAT-2",
+ "perigee_alt_km": 250.0,
+ "apogee_alt_km": 35786.0,
+ "array_degradation_per_year": 0.02,
+ "ppu_max_kW": 20.0,
+ "eta_total": 0.55,
+ "eta_ppu": 0.94,
+ "isp_s": 1500.0,
+ "epoch_utc": "2026-06-15T00:00:00",
+ "inc_deg": 28.5,
+ "raan_deg": 120.0,
+ "mass_kg": 650.0,
+ "array_power_bol_kW": 11.0,
+ "bus_load_kW": 1.6
+}
