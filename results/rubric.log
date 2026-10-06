@@ -1,0 +1,231 @@
+
+🔎 Checking task quality...
+  1/1 Mean: 1.000 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0:11:11 0:00:00                                     Task Quality Checks: electric-orbit-raising                                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Check                            ┃ Outcome        ┃ Explanation                                                    ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Verifiable                       │ pass           │ The verifier (tests/verify_core.py) is a deterministic         │
+│                                  │                │ fixed-step RK4 propagator with bisection-located eclipse       │
+│                                  │                │ edges, run at two step sizes whose agreement is checked. No    │
+│                                  │                │ LLM-as-judge, no randomness, no runtime network installs in    │
+│                                  │                │ test.sh (all deps baked into tests/Dockerfile). I reproduced   │
+│                                  │                │ the full pipeline locally and the verifier ran in well under a │
+│                                  │                │ second.                                                        │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Solvable                         │ pass           │ I actually executed solution/solve.sh's steps end-to-end       │
+│                                  │                │ (Q-law warm start, 400-iteration IPOPT NLP, emit) outside the  │
+│                                  │                │ task's Docker sandbox, producing /app/control.csv (45895 rows, │
+│                                  │                │ 4.[REDACTED] MB), and ran it through the real                  │
+│                                  │                │ tests/verify_core.py + test_outcome.py. All 4 tests passed:    │
+│                                  │                │ a=42[REDACTED]59.06 km, e=2.66e-4, i=0.0[REDACTED]23 deg,      │
+│                                  │                │ m_f=[REDACTED]323.68 kg, well inside all thresholds and        │
+│                                  │                │ closely matching the README's claimed reference numbers.       │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Difficult                        │ pass           │ This is a genuine multi-revolution low-thrust optimal control  │
+│                                  │                │ problem (GTO to GEO) with coupled plane change, J2             │
+│                                  │                │ perturbation, and eclipse switching. Solving it competitively  │
+│                                  │                │ (beating the [REDACTED]3[REDACTED]0 kg bar, which sits above a │
+│                                  │                │ tuned Q-law heuristic's [REDACTED]27[REDACTED] kg) requires    │
+│                                  │                │ real trajectory-optimization expertise (equinoctial-element    │
+│                                  │                │ transcription, NLP formulation, IPOPT tuning) that goes well   │
+│                                  │                │ beyond undergraduate coursework.                               │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Interesting                      │ pass           │ Minimum-propellant electric orbit raising from GTO to GEO is   │
+│                                  │                │ exactly the problem solved by mission/trajectory design        │
+│                                  │                │ engineers for all-electric GEO satellite programs (e.g. Boeing │
+│                                  │                │ 702SP-class missions). It is a realistic professional          │
+│                                  │                │ engineering problem, not a contrived puzzle.                   │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Outcome Verified                 │ pass           │ The verifier only checks the final physical outcome            │
+│                                  │                │ (control.csv propagated independently) -- step-size            │
+│                                  │                │ convergence, radius floor, final orbital elements, and final   │
+│                                  │                │ mass. It does not care how the trajectory was designed (Q-law, │
+│                                  │                │ direct collocation, indirect methods, etc. are all equally     │
+│                                  │                │ valid), so no particular approach is enforced.                 │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Anti Cheat Robustness            │ pass           │ The ground-truth physics model (tests/verify_core.py) lives    │
+│                                  │                │ only in the verifier image, built from tests/Dockerfile, which │
+│                                  │                │ is never available to the agent. The agent image               │
+│                                  │                │ (environment/Dockerfile) contains only numpy/scipy, no         │
+│                                  │                │ solution or oracle data. The verifier rejects symlinks,        │
+│                                  │                │ oversized files, and malformed rows, and the step-size         │
+│                                  │                │ cross-check specifically defeats control files that exploit    │
+│                                  │                │ integrator error.                                              │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Task Security                    │ pass           │ Reviewed all Dockerfiles and scripts; found no credential      │
+│                                  │                │ access, no external network calls beyond legitimate package    │
+│                                  │                │ installs, no obfuscated code, no destructive operations, and   │
+│                                  │                │ no prompt injection.                                           │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Functional Verification          │ pass           │ Verification executes a real physics propagation of the        │
+│                                  │                │ submitted control file and checks numeric outputs (mass,       │
+│                                  │                │ orbital elements, radius) against thresholds -- no             │
+│                                  │                │ string/keyword matching of any kind.                           │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Deterministic Reproducible       │ pass           │ All package versions (numpy==2.4.4,                            │
+│                                  │                │ scipy==[REDACTED].[REDACTED]7.[REDACTED], numba==0.68.0,       │
+│                                  │                │ casadi==3.8.[REDACTED], pytest==9.[REDACTED].[REDACTED],       │
+│                                  │                │ pytest-json-ctrf==0.5.2) are pinned and I confirmed they       │
+│                                  │                │ install successfully from PyPI. No live services are used. My  │
+│                                  │                │ local run of the reference solution showed the 5 s and 2.5 s   │
+│                                  │                │ propagations agreeing to ~[REDACTED]e-9 kg in mass, far inside │
+│                                  │                │ the [REDACTED]e-3 kg tolerance.                                │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Essential Difficulty             │ pass           │ The CSV format requirements are minimal (5-column header,      │
+│                                  │                │ unit-vector/throttle bounds, monotonic time) and not a source  │
+│                                  │                │ of likely failure. The genuine difficulty is the               │
+│                                  │                │ orbital-mechanics optimal-control problem itself, not          │
+│                                  │                │ formatting.                                                    │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Test Instruction Alignment       │ pass           │ Each test in test_outcome.py traces directly to a requirement  │
+│                                  │                │ in instruction.md: step-size agreement, radius floor, final    │
+│                                  │                │ a/e/i tolerances, and final mass threshold. No extra untested  │
+│                                  │                │ requirements and no tested behavior absent from the            │
+│                                  │                │ instruction. Tests are concise (under 50 lines).               │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Novel                            │ pass           │ While low-thrust GTO-to-GEO transfer is studied in the         │
+│                                  │                │ literature, this specific instantiation (exact eclipse model,  │
+│                                  │                │ verifier tolerances, dual-step cross-check, specific mass      │
+│                                  │                │ threshold) is a custom environment unlikely to be solvable by  │
+│                                  │                │ rote memorization or lookup.                                   │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Agentic                          │ pass           │ Solving this requires iterative exploration: writing and       │
+│                                  │                │ debugging a multi-stage numerical pipeline (guidance law, NLP  │
+│                                  │                │ transcription, exact-dynamics replay), tuning convergence, and │
+│                                  │                │ validating against the exact stated model -- not a one-shot    │
+│                                  │                │ generation.                                                    │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Reviewable                       │ pass           │ Although domain-specific, the README's claimed numbers (Q-law  │
+│                                  │                │ ~[REDACTED]27[REDACTED] kg, reference solution                 │
+│                                  │                │ ~[REDACTED]323.7 kg, GEO element errors ~4.9                   │
+│                                  │                │ km/2.7e-4/0.0[REDACTED]2 deg) are all derived from the         │
+│                                  │                │ included solution script, not hardcoded, and I independently   │
+│                                  │                │ reproduced matching values ([REDACTED]270.63 kg warm start,    │
+│                                  │                │ [REDACTED]323.68 kg final) by running the provided code.       │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Instruction Concision            │ pass           │ The instruction is dense but necessarily so -- it specifies    │
+│                                  │                │ the exact physical model the verifier uses (constants,         │
+│                                  │                │ dynamics, eclipse rule, file format), which is required        │
+│                                  │                │ information, not a solution hint. It uses an absolute path,    │
+│                                  │                │ has no headings/roleplay/fluff, and does not suggest any       │
+│                                  │                │ particular solution method.                                    │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Solution Quality                 │ pass           │ solve.sh installs pinned deps and runs oracle.py through three │
+│                                  │                │ genuine computation stages (warm/nlp/emit); it does not        │
+│                                  │                │ echo/cat a precomputed answer. oracle.py is a separate         │
+│                                  │                │ ~380-line file rather than an inlined heredoc, consistent with │
+│                                  │                │ the size guidance.                                             │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Separate Verifier Configured     │ pass           │ The verifier only reads the declared artifact                  │
+│                                  │                │ /app/control.csv; all verifier tooling (numpy, numba, pytest,  │
+│                                  │                │ pytest-json-ctrf) is baked into tests/Dockerfile with no       │
+│                                  │                │ runtime installs in test.sh; there are no shared/duplicated    │
+│                                  │                │ assets between environment/ and tests/ that could silently     │
+│                                  │                │ drift.                                                         │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Environment Hygiene              │ pass           │ environment/Dockerfile copies neither tests/ nor solution/,    │
+│                                  │                │ and contains no test-only or solution-only dependencies        │
+│                                  │                │ (casadi/numba/pytest are absent from it). tests/Dockerfile     │
+│                                  │                │ owns all verifier-only deps. Apt installs in                   │
+│                                  │                │ environment/Dockerfile are unpinned with proper                │
+│                                  │                │ update/cleanup.                                                │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Structured Data Schema           │ pass           │ instruction.md normatively specifies the exact CSV schema:     │
+│                                  │                │ exact header string, 5 numeric columns, unit-vector tolerance, │
+│                                  │                │ throttle bounds, monotonic time constraints, and row-count     │
+│                                  │                │ cap.                                                           │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Typos                            │ pass           │ No typos found in filenames, paths, commands, or               │
+│                                  │                │ variable/constant names; physics constants (mu, J2, R_E, Isp,  │
+│                                  │                │ g0) are consistent verbatim across instruction.md, oracle.py,  │
+│                                  │                │ and verify_core.py.                                            │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Difficulty Explanation Quality   │ pass           │ README's Difficulty explanation names the specific technical   │
+│                                  │                │ challenges (multi-revolution optimal control, coupled plane    │
+│                                  │                │ change, J2, eclipse discontinuities), quantifies the           │
+│                                  │                │ difficulty via concrete numbers ([REDACTED]27[REDACTED] kg     │
+│                                  │                │ heuristic vs [REDACTED]3[REDACTED]0 kg bar vs [REDACTED]324 kg │
+│                                  │                │ reference), and states who solves this in practice (mission    │
+│                                  │                │ designers for all-electric GEO satellites). No data-synthesis  │
+│                                  │                │ note is needed since there is no external dataset.             │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Solution Explanation Quality     │ pass           │ The Solution explanation describes the actual strategy (Q-law  │
+│                                  │                │ warm start, multiple shooting in modified equinoctial elements │
+│                                  │                │ via IPOPT, exact-dynamics replay plus Q-law trim) and is fully │
+│                                  │                │ consistent with oracle.py, which I ran and confirmed produces  │
+│                                  │                │ matching numbers ([REDACTED]323.68 kg).                        │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Verification Explanation Quality │ pass           │ The Verification explanation accurately describes the dual     │
+│                                  │                │ fixed-step RK4 cross-check and threshold checks, and justifies │
+│                                  │                │ the tolerance calibration with concrete reference numbers      │
+│                                  │                │ (station-acquisition-sized GEO tolerances,                     │
+│                                  │                │ [REDACTED]3[REDACTED]0 kg sitting between the                  │
+│                                  │                │ [REDACTED]27[REDACTED] kg heuristic and [REDACTED]323.7 kg     │
+│                                  │                │ reference, step-agreement tolerances >[REDACTED]00x the        │
+│                                  │                │ observed reference discrepancy). This matches the actual test  │
+│                                  │                │ files.                                                         │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Category And Tags                │ pass           │ category=Science / subcategory=Physics is an appropriate fit   │
+│                                  │                │ for an astrodynamics/orbital-mechanics problem. Tags           │
+│                                  │                │ (astrodynamics, optimal-control, trajectory-optimization,      │
+│                                  │                │ low-thrust) are specific and descriptive, not generic.         │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Task Name                        │ pass           │ The task identifier 'electric-orbit-raising' (from task.toml's │
+│                                  │                │ name field) is a concise, descriptive, kebab-case, 3-word slug │
+│                                  │                │ that clearly conveys the task's subject.                       │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Resource Configuration           │ pass           │ cpus=2/memory_mb=4096/storage_mb=[REDACTED]0240 comfortably    │
+│                                  │                │ cover the measured resource usage (~2[REDACTED]7 MB RSS,       │
+│                                  │                │ single-core IPOPT run). verifier timeout_sec=600 is generous   │
+│                                  │                │ but reasonable headroom given the up-to-200000-row cap, while  │
+│                                  │                │ my local run verified in under a second. agent                 │
+│                                  │                │ timeout_sec=28800 (8h) is justified by the genuine             │
+│                                  │                │ formulation/tuning difficulty, not computational load.         │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Task Readme                      │ pass           │ README.md includes Difficulty explanation, Solution            │
+│                                  │                │ explanation, Verification explanation, Relevant experience,    │
+│                                  │                │ and a task metadata summary, without redundant duplication of  │
+│                                  │                │ the instruction or solution code.                              │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Expert Time Estimate             │ pass           │ expert_time_estimate_hours=6.0 is non-zero and plausible for   │
+│                                  │                │ an expert already fluent in optimal control/astrodynamics to   │
+│                                  │                │ formulate and tune this pipeline, consistent with the stated   │
+│                                  │                │ difficulty.                                                    │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Task Toml Schema                 │ pass           │ All fields in task.toml (, , , , , artifacts) are recognized   │
+│                                  │                │ Harbor fields; no invented keys were found.                    │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ No Extraneous Files              │ pass           │ Every file present is referenced:                              │
+│                                  │                │ README.md/instruction.md/task.toml/solve.sh are required       │
+│                                  │                │ scaffold, oracle.py is invoked by solve.sh, and                │
+│                                  │                │ tests/Dockerfile, test.sh, test_outcome.py, verify_core.py     │
+│                                  │                │ form the complete verifier. No cruft or stray files.           │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Artifact Efficiency              │ pass           │ The sole artifact (/app/control.csv) is the agent's actual     │
+│                                  │                │ deliverable, not a large build-time-fixed asset; my generated  │
+│                                  │                │ version was 4.[REDACTED] MB, well within the documented        │
+│                                  │                │ limits. No [] hooks are used, so the associated fail-safe      │
+│                                  │                │ rules do not apply.                                            │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Verifier Execution Isolation     │ not_applicable │ The verifier never executes agent-produced code; it only       │
+│                                  │                │ parses numeric CSV data via np.loadtxt and propagates it with  │
+│                                  │                │ the verifier's own physics code. No agent code runs inside the │
+│                                  │                │ verifier process.                                              │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Ctrf Reporting                   │ pass           │ test.sh invokes pytest with --ctrf "$LOG_DIR/ctrf.json"        │
+│                                  │                │ against test_outcome.py, matching the standard CTRF reporting  │
+│                                  │                │ pattern for pytest-based verifiers.                            │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Do Not Modify Enforced           │ not_applicable │ instruction.md contains no 'do not modify/preserve' constraint │
+│                                  │                │ on any concrete artifact for the agent to violate.             │
+├──────────────────────────────────┼────────────────┼────────────────────────────────────────────────────────────────┤
+│ Binary Reward                    │ pass           │ test.sh writes exactly 'echo [REDACTED]' or 'echo 0' to        │
+│                                  │                │ reward.txt based on the pytest exit code; there is no          │
+│                                  │                │ fractional, weighted, or clamped scoring path anywhere in the  │
+│                                  │                │ verifier.                                                      │
+└──────────────────────────────────┴────────────────┴────────────────────────────────────────────────────────────────┘
+Agent cost: $1.1146
+
+Report: jobs/2026-10-05__16-37-39/check_report.json
+Inspect results by running `harbor view jobs`
+In the viewer, open a trial's Artifacts tab to read its check-result.json, and use ← / → to switch between tasks.

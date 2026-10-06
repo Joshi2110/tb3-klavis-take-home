@@ -1,0 +1,49 @@
+{
+    "id": "6f817d41-4cc9-4815-b61b-f21b82795cc9",
+    "started_at": "2026-10-05T16:52:15.284885",
+    "updated_at": "2026-10-05T16:55:08.777559",
+    "finished_at": "2026-10-05T16:55:08.777559",
+    "n_total_trials": 3,
+    "stats": {
+        "n_completed_trials": 3,
+        "n_errored_trials": 3,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "claude-code__claude-opus-5.5__adhoc": {
+                "n_trials": 3,
+                "n_errors": 3,
+                "metrics": [
+                    {
+                        "mean": 0.0
+                    }
+                ],
+                "pass_at_k": {
+                    "2": 0.0
+                },
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "electric-orbit-raising__CaA9cFX",
+                            "electric-orbit-raising__4dZW7ho",
+                            "electric-orbit-raising__U2oqSey"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "NonZeroAgentExitCodeError": [
+                        "electric-orbit-raising__CaA9cFX",
+                        "electric-orbit-raising__4dZW7ho",
+                        "electric-orbit-raising__U2oqSey"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": 0,
+        "n_cache_tokens": 0,
+        "n_output_tokens": 0,
+        "cost_usd": 0.0
+    }
+}

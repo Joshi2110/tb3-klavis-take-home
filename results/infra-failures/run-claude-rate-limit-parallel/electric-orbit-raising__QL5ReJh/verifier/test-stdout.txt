@@ -1,0 +1,155 @@
+============================= test session starts ==============================
+platform linux -- Python 3.[REDACTED]2.[REDACTED]5, pytest-9.[REDACTED].[REDACTED], pluggy-[REDACTED].6.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2
+collected 4 items
+
+test_outcome.py EEEE                                                     [[REDACTED]00%]
+
+==================================== ERRORS ====================================
+_________ ERROR at setup of test_propagation_is_step_size_independent __________
+
+    @pytest.fixture(scope="module")
+    def result():
+        try:
+>           res = V.evaluate(PATH)
+                  ^^^^^^^^^^^^^^^^
+
+test_outcome.py:[REDACTED]6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+verify_core.py:[REDACTED]67: in evaluate
+    d = load_control(path)
+        ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '/app/control.csv'
+
+    def load_control(path):
+        if not os.path.isfile(path) or os.path.islink(path):
+>           raise Fail(f"{path} missing or not a regular file")
+E           verify_core.Fail: /app/control.csv missing or not a regular file
+
+verify_core.py:[REDACTED]27: Fail
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="module")
+    def result():
+        try:
+            res = V.evaluate(PATH)
+        except V.Fail as ex:
+>           pytest.fail(f"invalid control file: {ex}")
+E           Failed: invalid control file: /app/control.csv missing or not a regular file
+
+test_outcome.py:[REDACTED]8: Failed
+_______________ ERROR at setup of test_radius_never_below_limit ________________
+
+    @pytest.fixture(scope="module")
+    def result():
+        try:
+>           res = V.evaluate(PATH)
+                  ^^^^^^^^^^^^^^^^
+
+test_outcome.py:[REDACTED]6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+verify_core.py:[REDACTED]67: in evaluate
+    d = load_control(path)
+        ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '/app/control.csv'
+
+    def load_control(path):
+        if not os.path.isfile(path) or os.path.islink(path):
+>           raise Fail(f"{path} missing or not a regular file")
+E           verify_core.Fail: /app/control.csv missing or not a regular file
+
+verify_core.py:[REDACTED]27: Fail
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="module")
+    def result():
+        try:
+            res = V.evaluate(PATH)
+        except V.Fail as ex:
+>           pytest.fail(f"invalid control file: {ex}")
+E           Failed: invalid control file: /app/control.csv missing or not a regular file
+
+test_outcome.py:[REDACTED]8: Failed
+__________________ ERROR at setup of test_final_orbit_is_geo ___________________
+
+    @pytest.fixture(scope="module")
+    def result():
+        try:
+>           res = V.evaluate(PATH)
+                  ^^^^^^^^^^^^^^^^
+
+test_outcome.py:[REDACTED]6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+verify_core.py:[REDACTED]67: in evaluate
+    d = load_control(path)
+        ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '/app/control.csv'
+
+    def load_control(path):
+        if not os.path.isfile(path) or os.path.islink(path):
+>           raise Fail(f"{path} missing or not a regular file")
+E           verify_core.Fail: /app/control.csv missing or not a regular file
+
+verify_core.py:[REDACTED]27: Fail
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="module")
+    def result():
+        try:
+            res = V.evaluate(PATH)
+        except V.Fail as ex:
+>           pytest.fail(f"invalid control file: {ex}")
+E           Failed: invalid control file: /app/control.csv missing or not a regular file
+
+test_outcome.py:[REDACTED]8: Failed
+_________________ ERROR at setup of test_final_mass_threshold __________________
+
+    @pytest.fixture(scope="module")
+    def result():
+        try:
+>           res = V.evaluate(PATH)
+                  ^^^^^^^^^^^^^^^^
+
+test_outcome.py:[REDACTED]6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+verify_core.py:[REDACTED]67: in evaluate
+    d = load_control(path)
+        ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = '/app/control.csv'
+
+    def load_control(path):
+        if not os.path.isfile(path) or os.path.islink(path):
+>           raise Fail(f"{path} missing or not a regular file")
+E           verify_core.Fail: /app/control.csv missing or not a regular file
+
+verify_core.py:[REDACTED]27: Fail
+
+During handling of the above exception, another exception occurred:
+
+    @pytest.fixture(scope="module")
+    def result():
+        try:
+            res = V.evaluate(PATH)
+        except V.Fail as ex:
+>           pytest.fail(f"invalid control file: {ex}")
+E           Failed: invalid control file: /app/control.csv missing or not a regular file
+
+test_outcome.py:[REDACTED]8: Failed
+=========================== short test summary info ============================
+ERROR test_outcome.py::test_propagation_is_step_size_independent - Failed: in...
+ERROR test_outcome.py::test_radius_never_below_limit - Failed: invalid contro...
+ERROR test_outcome.py::test_final_orbit_is_geo - Failed: invalid control file...
+ERROR test_outcome.py::test_final_mass_threshold - Failed: invalid control fi...
+============================== 4 errors in 0.29s ===============================

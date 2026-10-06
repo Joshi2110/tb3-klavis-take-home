@@ -1,0 +1,69 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-[REDACTED]0-05T2[REDACTED]:00:32.60[REDACTED]993+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.[REDACTED].[REDACTED]"
+        },
+        "summary": {
+            "tests": 4,
+            "passed": 0,
+            "failed": 4,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": [REDACTED]79[REDACTED]234032280,
+            "stop": [REDACTED]79[REDACTED]23403260[REDACTED]
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_outcome.py::test_propagation_is_step_size_independent",
+                "status": "failed",
+                "duration": 24,
+                "start": [REDACTED]79[REDACTED]23403255[REDACTED],
+                "stop": [REDACTED]79[REDACTED]234032575,
+                "retries": 0,
+                "file_path": "test_outcome.py",
+                "trace": "@pytest.fixture(scope=\"module\")\n    def result():\n        try:\n>           res = V.evaluate(PATH)\n                  ^^^^^^^^^^^^^^^^\n\ntest_outcome.py:[REDACTED]6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nverify_core.py:[REDACTED]67: in evaluate\n    d = load_control(path)\n        ^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\npath = '/app/control.csv'\n\n    def load_control(path):\n        if not os.path.isfile(path) or os.path.islink(path):\n>           raise Fail(f\"{path} missing or not a regular file\")\nE           verify_core.Fail: /app/control.csv missing or not a regular file\n\nverify_core.py:[REDACTED]27: Fail\n\nDuring handling of the above exception, another exception occurred:\n\n    @pytest.fixture(scope=\"module\")\n    def result():\n        try:\n            res = V.evaluate(PATH)\n        except V.Fail as ex:\n>           pytest.fail(f\"invalid control file: {ex}\")\nE           Failed: invalid control file: /app/control.csv missing or not a regular file\n\ntest_outcome.py:[REDACTED]8: Failed"
+            },
+            {
+                "name": "test_outcome.py::test_radius_never_below_limit",
+                "status": "failed",
+                "duration": 8,
+                "start": [REDACTED]79[REDACTED]234032576,
+                "stop": [REDACTED]79[REDACTED]234032584,
+                "retries": 0,
+                "file_path": "test_outcome.py",
+                "trace": "@pytest.fixture(scope=\"module\")\n    def result():\n        try:\n>           res = V.evaluate(PATH)\n                  ^^^^^^^^^^^^^^^^\n\ntest_outcome.py:[REDACTED]6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nverify_core.py:[REDACTED]67: in evaluate\n    d = load_control(path)\n        ^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\npath = '/app/control.csv'\n\n    def load_control(path):\n        if not os.path.isfile(path) or os.path.islink(path):\n>           raise Fail(f\"{path} missing or not a regular file\")\nE           verify_core.Fail: /app/control.csv missing or not a regular file\n\nverify_core.py:[REDACTED]27: Fail\n\nDuring handling of the above exception, another exception occurred:\n\n    @pytest.fixture(scope=\"module\")\n    def result():\n        try:\n            res = V.evaluate(PATH)\n        except V.Fail as ex:\n>           pytest.fail(f\"invalid control file: {ex}\")\nE           Failed: invalid control file: /app/control.csv missing or not a regular file\n\ntest_outcome.py:[REDACTED]8: Failed"
+            },
+            {
+                "name": "test_outcome.py::test_final_orbit_is_geo",
+                "status": "failed",
+                "duration": 8,
+                "start": [REDACTED]79[REDACTED]234032584,
+                "stop": [REDACTED]79[REDACTED]234032592,
+                "retries": 0,
+                "file_path": "test_outcome.py",
+                "trace": "@pytest.fixture(scope=\"module\")\n    def result():\n        try:\n>           res = V.evaluate(PATH)\n                  ^^^^^^^^^^^^^^^^\n\ntest_outcome.py:[REDACTED]6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nverify_core.py:[REDACTED]67: in evaluate\n    d = load_control(path)\n        ^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\npath = '/app/control.csv'\n\n    def load_control(path):\n        if not os.path.isfile(path) or os.path.islink(path):\n>           raise Fail(f\"{path} missing or not a regular file\")\nE           verify_core.Fail: /app/control.csv missing or not a regular file\n\nverify_core.py:[REDACTED]27: Fail\n\nDuring handling of the above exception, another exception occurred:\n\n    @pytest.fixture(scope=\"module\")\n    def result():\n        try:\n            res = V.evaluate(PATH)\n        except V.Fail as ex:\n>           pytest.fail(f\"invalid control file: {ex}\")\nE           Failed: invalid control file: /app/control.csv missing or not a regular file\n\ntest_outcome.py:[REDACTED]8: Failed"
+            },
+            {
+                "name": "test_outcome.py::test_final_mass_threshold",
+                "status": "failed",
+                "duration": 9,
+                "start": [REDACTED]79[REDACTED]234032592,
+                "stop": [REDACTED]79[REDACTED]23403260[REDACTED],
+                "retries": 0,
+                "file_path": "test_outcome.py",
+                "trace": "@pytest.fixture(scope=\"module\")\n    def result():\n        try:\n>           res = V.evaluate(PATH)\n                  ^^^^^^^^^^^^^^^^\n\ntest_outcome.py:[REDACTED]6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nverify_core.py:[REDACTED]67: in evaluate\n    d = load_control(path)\n        ^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\npath = '/app/control.csv'\n\n    def load_control(path):\n        if not os.path.isfile(path) or os.path.islink(path):\n>           raise Fail(f\"{path} missing or not a regular file\")\nE           verify_core.Fail: /app/control.csv missing or not a regular file\n\nverify_core.py:[REDACTED]27: Fail\n\nDuring handling of the above exception, another exception occurred:\n\n    @pytest.fixture(scope=\"module\")\n    def result():\n        try:\n            res = V.evaluate(PATH)\n        except V.Fail as ex:\n>           pytest.fail(f\"invalid control file: {ex}\")\nE           Failed: invalid control file: /app/control.csv missing or not a regular file\n\ntest_outcome.py:[REDACTED]8: Failed"
+            }
+        ]
+    }
+}

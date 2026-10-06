@@ -1,0 +1,22 @@
+{
+    "job_name": "run-codex",
+    "n_attempts": 3,
+    "n_concurrent_trials": 3,
+    "agents": [
+        {
+            "name": "codex",
+            "model_name": "openai/gpt-6.1-sol",
+            "kwargs": {
+                "reasoning_effort": "xhigh"
+            },
+            "env": {
+                "CODEX_FORCE_AUTH_JSON": "****"
+            }
+        }
+    ],
+    "tasks": [
+        {
+            "path": "tasks/electric-orbit-raising"
+        }
+    ]
+}

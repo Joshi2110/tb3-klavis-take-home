@@ -1,0 +1,18 @@
+{
+    "task": {
+        "path": "tasks/electric-orbit-raising"
+    },
+    "trial_name": "electric-orbit-raising__VkBBtc6",
+    "trials_dir": "jobs/run-codex",
+    "agent": {
+        "name": "codex",
+        "model_name": "openai/gpt-6.[REDACTED]-sol",
+        "kwargs": {
+            "reasoning_effort": "xhigh"
+        },
+        "env": {
+            "CODEX_FORCE_AUTH_JSON": "****"
+        }
+    },
+    "job_id": "08378846-f6fb-406d-b549-da7c390704b7"
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": "ATIF-v[REDACTED].7",
+  "session_id": "5697ca5d-50da-4ae9-9d56-3b3fe46e3979",
+  "agent": {
+    "name": "claude-code",
+    "version": "2.[REDACTED].289",
+    "model_name": "<synthetic>",
+    "extra": {
+      "cwds": [
+        "/app"
+      ],
+      "git_branches": [
+        "HEAD"
+      ]
+    }
+  },
+  "steps": [
+    {
+      "step_id": [REDACTED],
+      "timestamp": "2026-[REDACTED]0-05T20:54:05.250Z",
+      "source": "user",
+      "message": "A [REDACTED]500 kg electric satellite has been left by its launcher in a geostationary transfer orbit. Plan its orbit raising to geostationary orbit using as little propellant as possible, and write the thrust command history to /app/control.csv. The file is propagated by an independent verifier using exactly the model below. It only passes if, at the fixed final time, the orbit is geostationary within tolerance, the altitude limit has been respected throughout, and the final mass is at least [REDACTED]3[REDACTED]0.0 kg.\n\nThe model uses an Earth-centred inertial frame with units of km, s and kg. Gravity is the point-mass term with mu = 398600.44[REDACTED]8 km^3/s^2 plus the standard J2 zonal term with J2 = [REDACTED].08262668e-3 and R_E = 6378.[REDACTED]37 km, z being the Earth's spin axis. The only other force is the engine, which produces throttle × 5.0 N along the commanded inertial unit vector (acceleration throttle × 5.0 / m in m/s^2, so divide by [REDACTED]000 for km/s^2). The specific impulse is [REDACTED]800 s with g0 = 9.80665 m/s^2, so the mass decreases at throttle × 5.0 / ([REDACTED]800 × 9.80665) kg/s. The Sun direction is fixed along +X. The spacecraft is in eclipse whenever x < 0 and y^2 + z^2 < R_E^2. During eclipse the engine produces no thrust and consumes no propellant, whatever the command says.\n\nAt t = 0 the spacecraft is at the perigee of an orbit with perigee altitude 250 km, apogee altitude 35786 km, inclination 28.5 deg, RAAN 0 and argument of perigee 0. Its position is therefore r = (6628.[REDACTED]37, 0, 0) km and its velocity is v = (0, v_p cos 28.5 deg, v_p sin 28.5 deg), with v_p given by the vis-viva equation. The final time is fixed at TF = [REDACTED]555200 s ([REDACTED]8 days). At TF the osculating Keplerian elements computed from the Cartesian state must satisfy |a - 42[REDACTED]64 km| <= [REDACTED]0 km, e <= 5e-4 and i <= 0.05 deg, and the mass must be at least [REDACTED]3[REDACTED]0.0 kg. The distance from the Earth's centre must stay at or above R_E + 200 km over the whole interval [0, TF].\n\n/app/control.csv is a comma-separated ASCII file whose first line is exactly t,ux,uy,uz,throttle. Each following row holds five decimal numbers: a time in seconds, an inertial unit vector (norm within [REDACTED]e-6 of [REDACTED]) and a throttle in [0, [REDACTED]]. The first time is 0, each time is at least [REDACTED] s after the previous one, the last time is below TF, and the file has at most 200000 rows. Each row is held constant from its own time until the next row's time, and the last row holds until TF.\n\nThe verifier integrates the file with fixed-step RK4, locating eclipse entries and exits by bisection, once with a 5 s step and once with a 2.5 s step. The two runs must agree to within [REDACTED]e-3 kg in final mass, 0.[REDACTED] km in a and [REDACTED]e-6 in e. All the requirements above are evaluated on the 2.5 s run.\n\nYou have 28800 seconds to complete this task. Do not cheat by using online solutions or hints specific to this task.\n",
+      "extra": {
+        "is_sidechain": false
+      }
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-[REDACTED]0-05T20:54:05.969Z",
+      "source": "agent",
+      "model_name": "<synthetic>",
+      "message": "There's an issue with the selected model (claude-opus-5.5). It may not exist or you may not have access to it. Run --model to pick a different model.",
+      "metrics": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "cached_tokens": 0,
+        "extra": {
+          "output_tokens_details": null,
+          "cache_creation_input_tokens": 0,
+          "cache_read_input_tokens": 0,
+          "server_tool_use": {
+            "web_search_requests": 0,
+            "web_fetch_requests": 0
+          },
+          "service_tier": null,
+          "cache_creation": {
+            "ephemeral_[REDACTED]h_input_tokens": 0,
+            "ephemeral_5m_input_tokens": 0
+          },
+          "inference_geo": null,
+          "iterations": null,
+          "speed": null,
+          "fallback_credit": null
+        }
+      },
+      "llm_call_count": [REDACTED],
+      "extra": {
+        "stop_reason": "stop_sequence",
+        "stop_sequence": "",
+        "is_sidechain": false,
+        "cwd": "/app"
+      }
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 0,
+    "total_completion_tokens": 0,
+    "total_cached_tokens": 0,
+    "total_cost_usd": 0.0,
+    "total_steps": 2,
+    "extra": {
+      "total_cache_creation_input_tokens": 0,
+      "total_cache_read_input_tokens": 0
+    }
+  }
+}
