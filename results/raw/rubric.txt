@@ -1,0 +1,306 @@
+
+🔎 Checking task quality...
+  1/1 Mean: 1.000 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0:13:52 0:00:00                  Task Quality Checks: telemetry-archive-reconcile                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Check                          ┃ Outcome        ┃ Explanation                     ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Verifiable                     │ pass           │ Fully programmatic and          │
+│                                │                │ deterministic. The verifier     │
+│                                │                │ rebuilds every feed from fixed  │
+│                                │                │ seeds with a generator that     │
+│                                │                │ knows the truth and rejects     │
+│                                │                │ feeds that are unsound or break │
+│                                │                │ the guarantees. It then         │
+│                                │                │ requires the deduplicated audit │
+│                                │                │ stream and archive.json to      │
+│                                │                │ equal the reference output      │
+│                                │                │ exactly. Crash schedules come   │
+│                                │                │ from a fixed-seed RNG. test.sh  │
+│                                │                │ does no network installs. I     │
+│                                │                │ regenerated the visible feeds   │
+│                                │                │ and they match the shipped tgz  │
+│                                │                │ byte for byte. The full         │
+│                                │                │ verifier run against the        │
+│                                │                │ reference solution passed       │
+│                                │                │ 2[REDACTED]0/2[REDACTED]0       │
+│                                │                │ checks.                         │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Solvable                       │ pass           │ The reference solution is about │
+│                                │                │ 286 lines of engine plus a      │
+│                                │                │ 48-line durable wrapper (event  │
+│                                │                │ log with put, replay on         │
+│                                │                │ restart). In my run it passed   │
+│                                │                │ all 30 no-crash scenarios and   │
+│                                │                │ all [REDACTED]80 crash runs. An │
+│                                │                │ expert who already knows the    │
+│                                │                │ approach could write it in a    │
+│                                │                │ few hours.                      │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Difficult                      │ pass           │ Exact decidability reasoning is │
+│                                │                │ needed: counter wrap versus     │
+│                                │                │ reboot, unknown-boot            │
+│                                │                │ hypotheses, coverage ends, a    │
+│                                │                │ fixpoint evidence step,         │
+│                                │                │ deadline and contradiction      │
+│                                │                │ rules, and retractions. On top  │
+│                                │                │ of that, the program must       │
+│                                │                │ recover from crashes with       │
+│                                │                │ exactly-once audit output under │
+│                                │                │ at-least-once delivery. The     │
+│                                │                │ rare interleavings and the      │
+│                                │                │ durability protocol would       │
+│                                │                │ challenge an experienced        │
+│                                │                │ engineer.                       │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Interesting                    │ pass           │ Reconciling the identity of     │
+│                                │                │ satellite telemetry frames      │
+│                                │                │ across stations, recorder       │
+│                                │                │ playback and reboots, with      │
+│                                │                │ crash-safe processing, is a     │
+│                                │                │ real ground-segment engineering │
+│                                │                │ problem.                        │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Outcome Verified               │ pass           │ Only the audit stream and       │
+│                                │                │ archive output are graded. The  │
+│                                │                │ constraints (stdlib only, do    │
+│                                │                │ not modify the harness-owned    │
+│                                │                │ _durable.py, keep everything in │
+│                                │                │ /app/reconciler) are            │
+│                                │                │ mechanistic requirements of the │
+│                                │                │ grading setup.                  │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Anti Cheat Robustness          │ pass           │ Hidden feeds and expected       │
+│                                │                │ outputs are generated only      │
+│                                │                │ inside the verifier container.  │
+│                                │                │ The agent image has only three  │
+│                                │                │ visible feeds. Events are       │
+│                                │                │ served one at a time over a     │
+│                                │                │ socket, so the program cannot   │
+│                                │                │ read ahead. The reconciler runs │
+│                                │                │ as the unprivileged user recon, │
+│                                │                │ with /tests set to go-rwx and   │
+│                                │                │ /logs/verifier set to 700.      │
+│                                │                │ _durable.py is overwritten with │
+│                                │                │ the verifier's copy.            │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Task Security                  │ pass           │ No network calls, credential    │
+│                                │                │ access, obfuscation or          │
+│                                │                │ destructive operations. Process │
+│                                │                │ killing is limited to the recon │
+│                                │                │ user's processes inside the     │
+│                                │                │ verifier.                       │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Functional Verification        │ pass           │ The verifier executes the       │
+│                                │                │ reconciler on generated feeds,  │
+│                                │                │ with and without injected       │
+│                                │                │ crashes, and compares its       │
+│                                │                │ actual outputs. It does no      │
+│                                │                │ source scanning.                │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Deterministic Reproducible     │ pass           │ Seeded generation, a seeded     │
+│                                │                │ crash RNG, stdlib only, and no  │
+│                                │                │ live services. The same         │
+│                                │                │ reference results reproduced in │
+│                                │                │ my run, which used Python       │
+│                                │                │ 3.[REDACTED]3 while the image   │
+│                                │                │ uses 3.[REDACTED]2.             │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Essential Difficulty           │ pass           │ The audit and archive formats   │
+│                                │                │ are simple and fully specified. │
+│                                │                │ Failures would come from wrong  │
+│                                │                │ state-machine semantics or      │
+│                                │                │ broken crash recovery, not from │
+│                                │                │ formatting.                     │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Test Instruction Alignment     │ pass           │ The instruction requires        │
+│                                │                │ implementing SEMANTICS.md       │
+│                                │                │ exactly, matching the audit     │
+│                                │                │ stream and archive.json, and    │
+│                                │                │ handling crashes on feeds that  │
+│                                │                │ satisfy the §9 guarantees. The  │
+│                                │                │ verifier checks exactly these   │
+│                                │                │ things. The test code is long,  │
+│                                │                │ but most of it is a scenario    │
+│                                │                │ generator, not extra            │
+│                                │                │ assertions.                     │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Novel                          │ pass           │ A custom specification          │
+│                                │                │ combining frame-identity        │
+│                                │                │ decidability with               │
+│                                │                │ crash-consistent processing.    │
+│                                │                │ There is no textbook or online  │
+│                                │                │ solution to recall.             │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Agentic                        │ pass           │ Solving it means reading a long │
+│                                │                │ spec and the buggy code,        │
+│                                │                │ running the harness on visible  │
+│                                │                │ feeds, diffing audit streams,   │
+│                                │                │ and iterating on crash          │
+│                                │                │ scenarios. It cannot be done in │
+│                                │                │ one shot.                       │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Reviewable                     │ pass           │ SEMANTICS.md is precise and the │
+│                                │                │ README explains the approach.   │
+│                                │                │ Expected outputs are derived by │
+│                                │                │ a reference engine, and the     │
+│                                │                │ generator checks every PROOF    │
+│                                │                │ decision against the generated  │
+│                                │                │ truth. Nothing is hardcoded.    │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Instruction Concision          │ pass           │ Short and direct, uses absolute │
+│                                │                │ paths, and states only the      │
+│                                │                │ necessary constraints and the   │
+│                                │                │ harness usage. It gives no      │
+│                                │                │ hints about the solution        │
+│                                │                │ approach.                       │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Solution Quality               │ pass           │ solve.sh copies real            │
+│                                │                │ implementation files that live  │
+│                                │                │ in solution/reconciler/, and    │
+│                                │                │ the answer is computed at       │
+│                                │                │ runtime. No large heredocs.     │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Separate Verifier Configured   │ pass           │ The only agent input is the     │
+│                                │                │ /app/reconciler artifact, and   │
+│                                │                │ the verifier image pre-creates  │
+│                                │                │ /app. Visible feeds are         │
+│                                │                │ regenerated from seeds in the   │
+│                                │                │ verifier, as the README notes.  │
+│                                │                │ harness.py and _durable.py      │
+│                                │                │ match their agent copies except │
+│                                │                │ for the canary line. The same   │
+│                                │                │ base image is used in both, and │
+│                                │                │ nothing is installed at verify  │
+│                                │                │ time.                           │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Environment Hygiene            │ pass           │ The agent image copies only     │
+│                                │                │ app/ and the visible scenarios, │
+│                                │                │ with no tests or solution. The  │
+│                                │                │ verifier image owns /tests.     │
+│                                │                │ There is no apt usage and there │
+│                                │                │ are no extra dependencies.      │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Structured Data Schema         │ pass           │ SEMANTICS.md §8 normatively     │
+│                                │                │ defines the audit record        │
+│                                │                │ fields, null rules, seqno       │
+│                                │                │ numbering and order, and the    │
+│                                │                │ archive entry fields and        │
+│                                │                │ ordering.                       │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Typos                          │ pass           │ No typos found in paths,        │
+│                                │                │ commands, module names or       │
+│                                │                │ identifiers.                    │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Difficulty Explanation Quality │ pass           │ Explains the wrap-versus-reboot │
+│                                │                │ tension, the deadline and       │
+│                                │                │ contradiction interplay, and    │
+│                                │                │ crash consistency. It names the │
+│                                │                │ rare interleavings, says the    │
+│                                │                │ data are synthetic but          │
+│                                │                │ realistically structured, and   │
+│                                │                │ identifies ground-segment       │
+│                                │                │ software engineers as the       │
+│                                │                │ real-world role.                │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Solution Explanation Quality   │ pass           │ Concisely covers the per-hash   │
+│                                │                │ records, the closed-form        │
+│                                │                │ decidability test, the fixpoint │
+│                                │                │ evidence step, and the          │
+│                                │                │ log-then-process-emit-ack       │
+│                                │                │ durability with replay. It      │
+│                                │                │ matches the solution files.     │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Verification Explanation       │ pass           │ Accurately describes 26 hidden, │
+│ Quality                        │                │ 3 visible and [REDACTED] small  │
+│                                │                │ feeds, the truth checks in the  │
+│                                │                │ generator, unprivileged         │
+│                                │                │ socket-served runs, exact audit │
+│                                │                │ and archive matching,           │
+│                                │                │ [REDACTED]80 crash runs, and    │
+│                                │                │ CTRF output. These match        │
+│                                │                │ verify.py. No tolerances are    │
+│                                │                │ involved.                       │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Category And Tags              │ pass           │ Software / Distributed Systems  │
+│                                │                │ fits a crash-consistent         │
+│                                │                │ event-processing state machine. │
+│                                │                │ The tags are specific.          │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Task Name                      │ pass           │ telemetry-archive-reconcile is  │
+│                                │                │ three kebab-case words and      │
+│                                │                │ describes the task.             │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Resource Configuration         │ pass           │ The 8 h agent timeout suits a   │
+│                                │                │ hard task. 4 CPUs and 8 GB      │
+│                                │                │ match the verifier's 4 parallel │
+│                                │                │ workers. The 3600 s verifier    │
+│                                │                │ timeout covers a suite that     │
+│                                │                │ took about [REDACTED][REDACTED] │
+│                                │                │ min of nominal compute (37 min  │
+│                                │                │ wall clock in my run, which had │
+│                                │                │ load outliers).                 │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Task Readme                    │ pass           │ Has the Difficulty, Solution,   │
+│                                │                │ Verification and Relevant       │
+│                                │                │ experience sections plus a      │
+│                                │                │ metadata table. The content is  │
+│                                │                │ accurate.                       │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Expert Time Estimate           │ pass           │ 6 hours is plausible for an     │
+│                                │                │ expert who knows the approach:  │
+│                                │                │ an engine of about 300 lines    │
+│                                │                │ plus a durable wrapper, written │
+│                                │                │ against a complete spec.        │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Task Toml Schema               │ pass           │ Uses only recognized root,      │
+│                                │                │ task, metadata, verifier, agent │
+│                                │                │ and environment fields, plus    │
+│                                │                │ artifacts.                      │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ No Extraneous Files            │ pass           │ Every file is used: the         │
+│                                │                │ environment app and scenarios,  │
+│                                │                │ the solution files, and the     │
+│                                │                │ test generator, reference and   │
+│                                │                │ harness. The unused helpers in  │
+│                                │                │ families.py and generate.py are │
+│                                │                │ small parts of required files.  │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Artifact Efficiency            │ not_applicable │ The only artifact is the small  │
+│                                │                │ /app/reconciler source          │
+│                                │                │ directory, which is the agent's │
+│                                │                │ deliverable. There is no        │
+│                                │                │ collect hook and no large tree. │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Verifier Execution Isolation   │ pass           │ /logs/verifier is set to        │
+│                                │                │ root-only 700 before any agent  │
+│                                │                │ code runs. Agent code runs via  │
+│                                │                │ runuser as recon in its own     │
+│                                │                │ session, which is killed after  │
+│                                │                │ each run, and all recon         │
+│                                │                │ processes are killed at the     │
+│                                │                │ end. /tests is made unreadable  │
+│                                │                │ to recon. Root writes the       │
+│                                │                │ reward based on verify.py's     │
+│                                │                │ exit code.                      │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Ctrf Reporting                 │ pass           │ verify.py writes a CTRF report  │
+│                                │                │ to /logs/verifier/ctrf.json     │
+│                                │                │ with one test entry per         │
+│                                │                │ scenario and crash schedule.    │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Do Not Modify Enforced         │ pass           │ test.sh overwrites _durable.py  │
+│                                │                │ with the verifier's own copy,   │
+│                                │                │ so changing it gives no         │
+│                                │                │ advantage.                      │
+├────────────────────────────────┼────────────────┼─────────────────────────────────┤
+│ Binary Reward                  │ pass           │ test.sh writes [REDACTED] if    │
+│                                │                │ verify.py exits 0 and 0         │
+│                                │                │ otherwise. No other value can   │
+│                                │                │ be written.                     │
+└────────────────────────────────┴────────────────┴─────────────────────────────────┘
+Agent cost: $0.8610
+
+Report: jobs/2026-10-08__10-43-59/check_report.json
+Inspect results by running `harbor view jobs`
+In the viewer, open a trial's Artifacts tab to read its check-result.json, and use ← 
+/ → to switch between tasks.

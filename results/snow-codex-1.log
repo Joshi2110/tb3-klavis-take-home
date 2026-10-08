@@ -1,0 +1,20 @@
+  1/1 Mean: 1.000 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0:22:56 0:00:00
+adhoc • codex • gpt-6-astra
+┏━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━┓
+┃ Trials ┃ Exceptions ┃  Mean ┃
+┡━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━┩
+│      1 │          0 │ 1.000 │
+└────────┴────────────┴───────┘
+
+┏━━━━━━━━┳━━━━━━━┓
+┃ Reward ┃ Count ┃
+┡━━━━━━━━╇━━━━━━━┩
+│ 1.0    │     1 │
+└────────┴───────┘
+
+Job Info
+Total runtime: 22m 56s
+Results written to jobs/snow-codex-1/result.json
+Inspect results by running `harbor view jobs`
+Share results by running `harbor upload jobs/snow-codex-1`
+
