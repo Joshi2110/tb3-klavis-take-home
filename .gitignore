@@ -2,3 +2,6 @@ jobs/
 .DS_Store
 __pycache__/
 repo-skeleton.zip
+dev-notes/
+repo/
+*.zip
